@@ -4,20 +4,31 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../models/Admin");
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email });
 
-  if (!admin) return res.status(400).json({ msg: "Admin not found" });
+    if (!admin) {
+      return res.status(400).json({ msg: "Admin not found" });
+    }
 
-  if (admin.password !== password)
-    return res.status(400).json({ msg: "Wrong password" });
+    if (admin.password !== password) {
+      return res.status(400).json({ msg: "Wrong password" });
+    }
 
-  const token = jwt.sign({ id: admin._id }, "SECRET_KEY", {
-    expiresIn: "1d"
-  });
+    const token = jwt.sign(
+      { id: admin._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-  res.json({ token });
+    res.json({ token });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
 module.exports = router;

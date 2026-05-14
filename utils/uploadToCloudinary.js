@@ -5,7 +5,7 @@ const uploadToCloudinary = (fileBuffer, folder = "resumes") => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
-        folder: folder,
+        folder,
         resource_type: "auto",
       },
       (error, result) => {
@@ -14,6 +14,7 @@ const uploadToCloudinary = (fileBuffer, folder = "resumes") => {
       }
     );
 
+    stream.on("error", reject);
     streamifier.createReadStream(fileBuffer).pipe(stream);
   });
 };
