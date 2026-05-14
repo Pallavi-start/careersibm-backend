@@ -11,20 +11,36 @@ const applicationRoutes = require("./routes/applicationRoutes");
 
 const app = express();
 
-// middleware
-app.use(cors({ origin: "http://localhost:3000" }));
+// ✅ FIX 1: CORS for production + local
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://your-frontend.vercel.app" // replace later
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads"));
+
+const path = require("path");
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/admin", authRoutes);
+
 // DB connect
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log("DB Error:", err));
 
-// server start
-app.listen(5000, () => console.log("Server running on port 5000"));
+// ✅ FIX 2: Render uses dynamic port
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
