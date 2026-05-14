@@ -15,7 +15,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://your-frontend.vercel.app" // replace later
+    "https://careersibm-frontend.vercel.app" // replace later
   ],
   credentials: true
 }));
