@@ -1,6 +1,20 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const path = require("path");
+
+dotenv.config();
+
+const authRoutes = require("./routes/authRoutes");
+const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
+
 const app = express();
 
-// middleware
+// =========================
+// Middleware
+// =========================
 app.use(cors({
   origin: [
     "http://localhost:3000",
@@ -12,27 +26,38 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const path = require("path");
+// =========================
+// Static uploads folder
+// =========================
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ ADD THIS HERE (HEALTH CHECK ROUTE)
+// =========================
+// Health check route (IMPORTANT)
+// =========================
 app.get("/", (req, res) => {
   res.send("🚀 CareersIBM Backend is Running");
 });
 
-// routes
+// =========================
+// Routes
+// =========================
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/admin", authRoutes);
 
-// DB connect
+// =========================
+// MongoDB connection
+// =========================
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log("DB Error:", err));
+  .catch((err) => console.log("DB Error:", err));
 
-// server
+// =========================
+// Server start (Render compatible)
+// =========================
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
