@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const path = require("path");
 
 dotenv.config();
 
@@ -27,12 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // =========================
-// Static uploads folder
-// =========================
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// =========================
-// Health check route (IMPORTANT)
+// Health check route
 // =========================
 app.get("/", (req, res) => {
   res.send("🚀 CareersIBM Backend is Running");

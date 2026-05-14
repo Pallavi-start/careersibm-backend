@@ -1,28 +1,16 @@
 const mongoose = require("mongoose");
 
-const applicationSchema =
-new mongoose.Schema({
-
+const applicationSchema = new mongoose.Schema({
   fullName: String,
-
   email: String,
-
   phone: String,
-
-  address: String,
-
   skills: String,
-
   experience: String,
-
-  resume: String,
-
-  documents: [String]
-
+  resume: String, // ✅ Cloudinary URL
+  status: {
+    type: String,
+    default: "pending",
+  },
 });
 
-module.exports =
-mongoose.model(
-  "Application",
-  applicationSchema
-);
+module.exports = mongoose.model("Application", applicationSchema);
