@@ -11,7 +11,10 @@ const uploadToCloudinary = (buffer, folder) => {
   return new Promise((resolve, reject) => {
 
     const stream = cloudinary.uploader.upload_stream(
-      { folder },
+      {
+        folder,
+        resource_type: "raw",
+      },
       (error, result) => {
 
         if (result) {
