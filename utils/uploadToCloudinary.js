@@ -14,7 +14,7 @@ const uploadToCloudinary = (buffer, folder) => {
       {
         folder,
         resource_type: "raw",
-        format: "pdf",
+        
       },
       (error, result) => {
 
