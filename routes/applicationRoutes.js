@@ -31,10 +31,11 @@ router.post("/apply", upload.single("resume"), async (req, res) => {
 
     await newApp.save();
 
-    res.status(201).json({
-      success: true,
-      message: "Application submitted",
-    });
+   res.status(201).json({
+  success: true,
+  message: "Application submitted",
+  data: newApp, // ✅ IMPORTANT FIX
+});
 
   } catch (err) {
     res.status(500).json({ error: "Upload failed" });
