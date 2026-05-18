@@ -46,11 +46,21 @@ app.get("/", (req, res) => {
   res.send("🚀 CareersIBM Backend is Running");
 });
 
+
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
+
 app.use("/api/jobs", jobRoutes);
-app.use("/api/applications", applicationRoutes);
-app.use("/api/admin", authRoutes);
+
+app.use(
+  "/api/applications",
+  applicationRoutes
+);
+
+app.use(
+  "/api/employee",
+  require("./routes/employeeRoutes")
+);
 
 // ================= ERROR HANDLER =================
 app.use((err, req, res, next) => {
