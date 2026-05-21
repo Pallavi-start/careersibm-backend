@@ -23,6 +23,8 @@ const sendOtp = async (email, otp) => {
       <h1>${otp}</h1>
     `,
   });
+
+  
 };
 
 module.exports = sendOtp;
