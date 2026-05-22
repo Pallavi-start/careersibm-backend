@@ -2,6 +2,8 @@ const nodemailer = require("nodemailer");
 
 const sendOtp = async (email, otp) => {
   try {
+    console.log("EMAIL:", process.env.EMAIL);
+console.log("PASSWORD:", process.env.PASSWORD);
 
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
