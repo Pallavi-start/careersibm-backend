@@ -1,26 +1,22 @@
 const nodemailer = require("nodemailer");
 
 const sendOtp = async (email, otp) => {
-
   try {
 
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.brevo.com",
-      port: 587,
+      port: 2525,
       secure: false,
 
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD,
       },
-
-      connectionTimeout: 10000,
     });
 
     const info = await transporter.sendMail({
       from: process.env.EMAIL,
       to: email,
-
       subject: "Your OTP Code",
 
       html: `
