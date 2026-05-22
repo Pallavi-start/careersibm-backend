@@ -5,7 +5,7 @@ const sendOtp = async (email, otp) => {
   try {
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: "smtp-relay.brevo.com",
       port: 587,
       secure: false,
 
@@ -14,12 +14,10 @@ const sendOtp = async (email, otp) => {
         pass: process.env.PASSWORD,
       },
 
-      tls: {
-        rejectUnauthorized: false,
-      },
+      connectionTimeout: 10000,
     });
 
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: process.env.EMAIL,
       to: email,
 
@@ -31,7 +29,7 @@ const sendOtp = async (email, otp) => {
       `,
     });
 
-    console.log("OTP Email Sent");
+    console.log("Email Sent:", info.response);
 
   } catch (error) {
 
