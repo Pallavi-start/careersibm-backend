@@ -25,6 +25,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^8.0.7",
     "otp-generator": "^4.0.1",
+    "sib-api-v3-sdk": "^8.5.0",
     "streamifier": "^0.1.1"
   }
 }

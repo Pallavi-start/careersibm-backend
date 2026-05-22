@@ -1,33 +1,39 @@
-const nodemailer = require("nodemailer");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
 
 const sendOtp = async (email, otp) => {
+
   try {
-    console.log("EMAIL:", process.env.EMAIL);
-console.log("PASSWORD:", process.env.PASSWORD);
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp-relay.brevo.com",
-      port: 2525,
-      secure: false,
+    const client = SibApiV3Sdk.ApiClient.instance;
 
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
+    client.authentications["api-key"].apiKey =
+      process.env.BREVO_API_KEY;
+
+    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+    const sendSmtpEmail = {
+      sender: {
+        email: "pshirbhate1999@gmail.com",
+        name: "OTP Verification",
       },
-    });
 
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL,
-      to: email,
+      to: [
+        {
+          email: email,
+        },
+      ],
+
       subject: "Your OTP Code",
 
-      html: `
+      htmlContent: `
         <h2>Your OTP is:</h2>
         <h1>${otp}</h1>
       `,
-    });
+    };
 
-    console.log("Email Sent:", info.response);
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("Email Sent:", data);
 
   } catch (error) {
 
