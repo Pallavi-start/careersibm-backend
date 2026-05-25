@@ -1,28 +1,22 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
-  {
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+const userSchema = new mongoose.Schema({
 
-    otp: String,
-
-    otpExpire: Date,
-
-    googleId: String,
-
-    verified: {
-      type: Boolean,
-      default: false,
-    },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  { timestamps: true }
-);
 
-module.exports = mongoose.model(
-  "User",
-  userSchema
-);
+  otp: String,
+
+  googleId: String,
+
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+
+});
+
+module.exports = mongoose.model("User", userSchema);

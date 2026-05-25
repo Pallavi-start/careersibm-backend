@@ -9,7 +9,8 @@ dotenv.config();
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
-const userRoutes = require("./routes/userRoutes.js")
+
+
 
 const app = express();
 
@@ -53,7 +54,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications",applicationRoutes);
 app.use( "/api/employee", require("./routes/employeeRoutes"));
-app.use("/api/user",require("./routes/userRoutes.js"))
+app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/profile", require("./routes/profileRoutes"));
 
 // ================= ERROR HANDLER =================
 app.use((err, req, res, next) => {

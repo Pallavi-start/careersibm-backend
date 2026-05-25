@@ -9,12 +9,14 @@ const sendOtp = async (email, otp) => {
     client.authentications["api-key"].apiKey =
       process.env.BREVO_API_KEY;
 
-    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+    const apiInstance =
+      new SibApiV3Sdk.TransactionalEmailsApi();
 
     const sendSmtpEmail = {
+
       sender: {
         email: "pshirbhate1999@gmail.com",
-        name: "OTP Verification",
+        name: "CareersIBM",
       },
 
       to: [
@@ -23,17 +25,30 @@ const sendOtp = async (email, otp) => {
         },
       ],
 
-      subject: "Your OTP Code",
+      subject: "Your OTP Verification Code",
 
       htmlContent: `
-        <h2>Your OTP is:</h2>
-        <h1>${otp}</h1>
+        <div style="font-family:sans-serif;padding:20px;">
+          
+          <h2>CareersIBM Login OTP</h2>
+
+          <p>Your OTP code is:</p>
+
+          <h1 style="letter-spacing:4px;">
+            ${otp}
+          </h1>
+
+          <p>
+            This OTP will expire soon.
+          </p>
+
+        </div>
       `,
     };
 
-    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    console.log("Email Sent:", data);
+    console.log("OTP Email Sent");
 
   } catch (error) {
 
