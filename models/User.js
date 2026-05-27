@@ -1,22 +1,21 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+// const userSchema = new mongoose.Schema(
+//   {
+//     email: { type: String, required: true, unique: true },
+//     password: { type: String, required: true },
 
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+//     profileCompleted: { type: Boolean, default: false },
 
-  otp: String,
+//     firstName: String,
+//     lastName: String,
+//     phone: String,
 
-  googleId: String,
+//     // role: { type: String, default: "employee" },
 
-  verified: {
-    type: Boolean,
-    default: false,
-  },
+//     profileImage: String,
+//   },
+//   { timestamps: true }
+// );
 
-});
-
-module.exports = mongoose.model("User", userSchema);
+// module.exports = mongoose.model("User", userSchema);

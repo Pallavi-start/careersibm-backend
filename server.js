@@ -10,6 +10,10 @@ const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 
+const signupRoutes = require("./routes/signup.routes");
+const otpRoutes = require("./routes/otp.routes");
+const loginRoutes = require("./routes/login.routes");
+const profileRoutes = require("./routes/profile.routes");
 
 
 const app = express();
@@ -54,9 +58,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications",applicationRoutes);
 app.use( "/api/employee", require("./routes/employeeRoutes"));
-app.use("/api/user", require("./routes/userRoutes"));
-app.use("/api/profile", require("./routes/profileRoutes"));
-
+// app.use("/api/user", require("./routes/userRoutes"));
+// app.use("/api/profile", require("./routes/profileRoutes"));
+app.use("/api", require("./routes/signup.routes"));
+app.use("/api", require("./routes/otp.routes"));
+app.use("/api", require("./routes/login.routes"));
+app.use("/api", require("./routes/profile.routes"));
 // ================= ERROR HANDLER =================
 app.use((err, req, res, next) => {
   console.error(err.stack);

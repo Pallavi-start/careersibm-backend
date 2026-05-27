@@ -1,34 +1,24 @@
-const jwt = require("jsonwebtoken");
+const { protect } = require("./userMiddleware");
 
-module.exports = (req, res, next) => {
-
-  try {
-
-    const authHeader = req.header("Authorization");
-
-    if (!authHeader) {
-      return res.status(401).json({
-        message: "Please login first",
-      });
-    }
-
-    // REMOVE "Bearer "
-    const token = authHeader.replace("Bearer ", "");
-
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
-
-    req.user = decoded;
-
-    next();
-
-  } catch (error) {
-
-    return res.status(401).json({
-      message: "Invalid token",
-    });
-
+// user must be logged in
+const userOnly = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "User not logged in" });
   }
+  next();
+};
+
+// optional: profile must be completed
+const profileCompletedOnly = (req, res, next) => {
+  if (!req.user.profileCompleted) {
+    return res.status(403).json({
+      message: "Complete profile first",
+    });
+  }
+  next();
+};
+
+module.exports = {
+  userOnly,
+  profileCompletedOnly,
 };
