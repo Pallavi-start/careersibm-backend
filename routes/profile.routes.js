@@ -1,15 +1,31 @@
 const router = require("express").Router();
-const multer = require("multer");
-const { updateProfile } = require("../controllers/profile.controller");
 
-const upload = multer({ dest: "uploads/" });
+const upload = require("../middleware/upload");
+
+const {
+  updateProfile,
+} = require("../controllers/profile.controller");
 
 router.post(
   "/update-profile",
+
   upload.fields([
-    { name: "resume", maxCount: 1 },
-    { name: "coverLetter", maxCount: 1 },
+    {
+      name: "resume",
+      maxCount: 1,
+    },
+
+    {
+      name: "coverLetter",
+      maxCount: 1,
+    },
+
+    {
+      name: "documents",
+      maxCount: 10,
+    },
   ]),
+
   updateProfile
 );
 
