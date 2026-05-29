@@ -52,14 +52,12 @@ exports.updateProfile = async (
     // ============================
     if (req.files?.resume?.[0]) {
 
-      const result =
-        await uploadToCloudinary(
-          req.files.resume[0].path,
-          {
-            folder: "ibm-resumes",
-            resource_type: "auto",
-          }
-        );
+     const result =
+ await uploadToCloudinary(
+  req.files.resume[0].buffer,
+  "ibm-resumes",
+  req.files.resume[0].originalname
+);
 
       resumeUrl = result.secure_url;
     }
@@ -71,15 +69,12 @@ exports.updateProfile = async (
       req.files?.coverLetter?.[0]
     ) {
 
-      const result =
-        await uploadToCloudinary(
-          req.files.coverLetter[0].path,
-          {
-            folder:
-              "ibm-coverletters",
-            resource_type: "auto",
-          }
-        );
+     const result =
+ await uploadToCloudinary(
+  req.files.coverLetter[0].buffer,
+  "ibm-coverletters",
+  req.files.coverLetter[0].originalname
+);
 
       coverLetterUrl =
         result.secure_url;
@@ -101,15 +96,12 @@ exports.updateProfile = async (
         const file =
           req.files.documents[i];
 
-        const result =
-          await uploadToCloudinary(
-            file.path,
-            {
-              folder:
-                "ibm-documents",
-              resource_type: "auto",
-            }
-          );
+       const result =
+  await uploadToCloudinary(
+  file.buffer,
+  "ibm-documents",
+  file.originalname
+);
 
         uploadedDocuments.push({
           name:

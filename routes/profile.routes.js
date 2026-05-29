@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const upload = require("../middleware/upload");
+const upload = require("../middleware/multer");
 
 const {
   updateProfile,
