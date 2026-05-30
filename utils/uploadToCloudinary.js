@@ -15,24 +15,13 @@ const uploadToCloudinary = (buffer, folder, originalname) => {
     .replace(/\s/g, "_")
     .replace(/[()]/g, "");
 
-  const ext = originalname.split(".").pop();
-
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder,
-
-        // IMPORTANT for PDFs
-        resource_type: "raw",
-
-        // keeps filename
+        resource_type: "raw",   // ✅ MUST be raw for PDF
         public_id: nameWithoutExt,
-
-        // VERY IMPORTANT (fixes extension issues)
-        format: ext,
-
-        use_filename: true,
-        unique_filename: false,
+        access_mode: "public",
       },
       (error, result) => {
         if (error) return reject(error);
