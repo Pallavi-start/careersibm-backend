@@ -13,12 +13,25 @@ router.post("/apply", upload.single("resume"), async (req, res) => {
   try {
     const { fullName, email, phone, skills, experience } = req.body;
 
-    let resumeUrl = "";
-
-    if (req.file) {
-      const result = await uploadToCloudinary(req.file.buffer, "resumes");
-      resumeUrl = result.secure_url;
+    if (!fullName || !email || !phone) {
+      return res.status(400).json({
+        error: "Required fields missing",
+      });
     }
+
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Resume file is required",
+      });
+    }
+
+    const result = await uploadToCloudinary(
+      req.file.buffer,
+      "resumes",
+      req.file.originalname
+    );
+
+    const resumeUrl = result.secure_url;
 
     const newApp = new Application({
       fullName,
@@ -31,14 +44,18 @@ router.post("/apply", upload.single("resume"), async (req, res) => {
 
     await newApp.save();
 
-   res.status(201).json({
-  success: true,
-  message: "Application submitted",
-  data: newApp, // ✅ IMPORTANT FIX
-});
+    res.status(201).json({
+      success: true,
+      message: "Application submitted",
+      data: newApp,
+    });
 
   } catch (err) {
-    res.status(500).json({ error: "Upload failed" });
+    console.error("APPLICATION ERROR:", err);
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
