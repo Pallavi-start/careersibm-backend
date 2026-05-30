@@ -23,7 +23,7 @@ const uploadToCloudinary = (buffer, folder, originalname) => {
         folder,
 
         // IMPORTANT for PDFs
-        resource_type: "auto",
+        resource_type: "raw",
 
         // keeps filename
         public_id: nameWithoutExt,
