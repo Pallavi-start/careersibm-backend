@@ -19,7 +19,7 @@ const uploadToCloudinary = (buffer, folder, originalname) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: "raw",   // ✅ MUST be raw for PDF
+        resource_type: "auto",   // ✅ MUST be raw for PDF
         public_id: nameWithoutExt,
         access_mode: "public",
       },
