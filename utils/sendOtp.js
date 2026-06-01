@@ -14,10 +14,10 @@ const sendOtp = async (email, otp) => {
 
     const sendSmtpEmail = {
 
-      sender: {
-        email: "pshirbhate1999@gmail.com",
-        name: "CareersIBM",
-      },
+     sender: {
+  email: process.env.BREVO_SENDER_EMAIL,
+  name: process.env.BREVO_SENDER_NAME,
+},
 
       to: [
         {
