@@ -23,7 +23,7 @@ exports.updateProfile = async (
       middleName,
       lastName,
       preferredName,
-
+      email, 
       phoneNumber,
 
       skills,
@@ -62,9 +62,7 @@ exports.updateProfile = async (
       resumeUrl = result.secure_url;
     }
 
-    // ============================
-    // COVER LETTER
-    // ============================
+ 
     if (
       req.files?.coverLetter?.[0]
     ) {
@@ -112,9 +110,7 @@ exports.updateProfile = async (
       }
     }
 
-    // ============================
-    // SKILLS
-    // ============================
+    
     let skillsArray = [];
 
     if (skills) {
@@ -130,62 +126,98 @@ exports.updateProfile = async (
           : skills;
     }
 
-    // ============================
-    // UPDATE PROFILE
-    // ============================
-    await Profile.findOneAndUpdate(
+    const existingProfile =
+  await Profile.findOne({ userId });
+   const updatedProfile =
+  await Profile.findOneAndUpdate(
       { userId },
 
-      {
-        // BASIC INFO
-        firstName,
-        middleName,
-        lastName,
-        preferredName,
+     {
+  firstName:
+    firstName ||
+    existingProfile?.firstName,
 
-        phoneNumber,
+  middleName:
+    middleName ||
+    existingProfile?.middleName,
 
-        // ADDRESS
-        state,
-        city,
-        addressLine1,
-        addressLine2,
-        zipCode,
-        website,
+  lastName:
+    lastName ||
+    existingProfile?.lastName,
 
-        // FILES
-        resume: resumeUrl,
-        coverLetter:
-          coverLetterUrl,
+  preferredName:
+    preferredName ||
+    existingProfile?.preferredName,
 
-        documents:
-          uploadedDocuments,
+  phoneNumber:
+    phoneNumber ||
+    existingProfile?.phoneNumber,
+email:
+  email ||
+  existingProfile?.email,
+  state:
+    state ||
+    existingProfile?.state,
 
-        // OTHER
-        skills: skillsArray,
-        experience,
+  city:
+    city ||
+    existingProfile?.city,
 
-        // ARRAY DATA
-        workHistory:
-          workHistory
-            ? JSON.parse(
-                workHistory
-              )
-            : [],
+  addressLine1:
+    addressLine1 ||
+    existingProfile?.addressLine1,
 
-        educationHistory:
+  addressLine2:
+    addressLine2 ||
+    existingProfile?.addressLine2,
+
+  zipCode:
+    zipCode ||
+    existingProfile?.zipCode,
+
+  website:
+    website ||
+    existingProfile?.website,
+
+  resume:
+    resumeUrl ||
+    existingProfile?.resume,
+
+  coverLetter:
+    coverLetterUrl ||
+    existingProfile?.coverLetter,
+
+  documents:
+    uploadedDocuments.length > 0
+      ? uploadedDocuments
+      : existingProfile?.documents || [],
+
+  skills:
+    skillsArray.length > 0
+      ? skillsArray
+      : existingProfile?.skills || [],
+
+  experience:
+    experience ||
+    existingProfile?.experience,
+
+  workHistory:
+    workHistory
+      ? JSON.parse(workHistory)
+      : existingProfile?.workHistory || [],
+
+  educationHistory:
+    educationHistory
+      ? JSON.parse(
           educationHistory
-            ? JSON.parse(
-                educationHistory
-              )
-            : [],
+        )
+      : existingProfile?.educationHistory || [],
 
-        languages: languages
-          ? JSON.parse(
-              languages
-            )
-          : [],
-      },
+  languages:
+    languages
+      ? JSON.parse(languages)
+      : existingProfile?.languages || [],
+     },
 
       {
         upsert: true,
@@ -193,9 +225,7 @@ exports.updateProfile = async (
       }
     );
 
-    // ============================
-    // USER PROFILE COMPLETE
-    // ============================
+   
     await User.findByIdAndUpdate(
       userId,
       {
@@ -204,9 +234,10 @@ exports.updateProfile = async (
     );
 
     res.json({
-      message:
-        "Profile updated successfully",
-    });
+  message:
+    "Profile updated successfully",
+  profile: updatedProfile,
+});
 
   } catch (error) {
 
