@@ -71,7 +71,7 @@ const profileSchema = new mongoose.Schema({
     },
   ],
 });
-
+profileSchema.index({ userId: 1 }, { unique: true });
 module.exports = mongoose.model(
   "Profile",
   profileSchema

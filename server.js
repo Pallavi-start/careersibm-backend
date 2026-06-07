@@ -17,7 +17,7 @@ const profileRoutes = require("./routes/profile.routes");
 
 
 const app = express();
-
+const cookieParser = require("cookie-parser");
 // ================= CORS =================
 const allowedOrigins = [
   "http://localhost:3000",
@@ -27,15 +27,16 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow tools like Postman or server-to-server
+
+    // allow Postman / server-to-server
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log("Blocked CORS request from:", origin);
-      callback(new Error("Not allowed by CORS"));
+      return callback(null, true);
     }
+
+    console.log("❌ Blocked CORS:", origin);
+    return callback(new Error("CORS Not Allowed"));
   },
   credentials: true
 }));
@@ -43,7 +44,7 @@ app.use(cors({
 // ================= MIDDLEWARE =================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 // ================= STATIC FILES =================
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -64,6 +65,7 @@ app.use("/api", require("./routes/signup.routes"));
 app.use("/api", require("./routes/otp.routes"));
 app.use("/api", require("./routes/login.routes"));
 app.use("/api", require("./routes/profile.routes"));
+
 // ================= ERROR HANDLER =================
 app.use((err, req, res, next) => {
   console.error(err.stack);
