@@ -134,7 +134,29 @@ exports.getProfile = async (req, res) => {
     res.json({
       user: {
         ...user,
-        ...(profile || {}),
+        ...(profile
+          ? {
+              firstName: profile.firstName,
+              middleName: profile.middleName,
+              lastName: profile.lastName,
+              preferredName: profile.preferredName,
+              phoneNumber: profile.phoneNumber,
+              skills: profile.skills,
+              experience: profile.experience,
+              state: profile.state,
+              city: profile.city,
+              addressLine1: profile.addressLine1,
+              addressLine2: profile.addressLine2,
+              zipCode: profile.zipCode,
+              website: profile.website,
+              workHistory: profile.workHistory,
+              educationHistory: profile.educationHistory,
+              languages: profile.languages,
+              resume: profile.resume,
+              coverLetter: profile.coverLetter,
+              documents: profile.documents,
+            }
+          : {}),
       },
     });
 
