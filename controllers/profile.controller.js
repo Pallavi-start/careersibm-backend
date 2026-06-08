@@ -30,10 +30,11 @@ exports.updateProfile = async (req, res) => {
     } = req.body;
 
     // FILES
-    let resumeUrl = "";
-    let coverLetterUrl = "";
-    let uploadedDocuments = [];
+   const existingProfile = await Profile.findOne({ userId });;
 
+let resumeUrl = existingProfile?.resume;
+let coverLetterUrl = existingProfile?.coverLetter;
+let uploadedDocuments = existingProfile?.documents || [];
     if (req.files?.resume?.[0]) {
       const result = await uploadToCloudinary(
         req.files.resume[0].buffer,
@@ -52,52 +53,76 @@ exports.updateProfile = async (req, res) => {
       coverLetterUrl = result.secure_url;
     }
 
-    if (req.files?.documents) {
-      for (let file of req.files.documents) {
-        const result = await uploadToCloudinary(
-          file.buffer,
-          "ibm-documents",
-          file.originalname
-        );
+    if (req.files?.documents?.length) {
+  const newDocs = [];
 
-        uploadedDocuments.push({
-          name: file.originalname,
-          fileUrl: result.secure_url,
-        });
-      }
-    }
+  for (let file of req.files.documents) {
+    const result = await uploadToCloudinary(
+      file.buffer,
+      "ibm-documents",
+      file.originalname
+    );
 
-    const skillsArray = skills
-      ? typeof skills === "string"
-        ? skills.split(",").map(s => s.trim())
-        : skills
-      : [];
+    newDocs.push({
+      name: file.originalname,
+      fileUrl: result.secure_url,
+    });
+  }
+
+  uploadedDocuments = [...uploadedDocuments, ...newDocs];
+}
+
+ const skillsArray =
+  skills !== undefined && skills !== null && skills !== ""
+    ? typeof skills === "string"
+      ? skills.split(",").map(s => s.trim()).filter(Boolean)
+      : skills
+    : existingProfile?.skills || [];
 
     const updatedProfile = await Profile.findOneAndUpdate(
       { userId },
       {
-        $set: {
-          firstName,
-          middleName,
-          lastName,
-          preferredName,
-          email,
-          phoneNumber,
-          state,
-          city,
-          addressLine1,
-          addressLine2,
-          zipCode,
-          website,
-          experience,
-          resume: resumeUrl,
-          coverLetter: coverLetterUrl,
-          documents: uploadedDocuments,
-          skills: skillsArray,
-          workHistory: workHistory ? JSON.parse(workHistory) : [],
-          educationHistory: educationHistory ? JSON.parse(educationHistory) : [],
-          languages: languages ? JSON.parse(languages) : [],
-        },
+       $set: {
+  firstName: firstName ?? existingProfile?.firstName,
+  middleName: middleName ?? existingProfile?.middleName,
+  lastName: lastName ?? existingProfile?.lastName,
+  preferredName: preferredName ?? existingProfile?.preferredName,
+
+  phoneNumber: phoneNumber ?? existingProfile?.phoneNumber,
+  
+
+  state: state ?? existingProfile?.state,
+  city: city ?? existingProfile?.city,
+  addressLine1: addressLine1 ?? existingProfile?.addressLine1,
+  addressLine2: addressLine2 ?? existingProfile?.addressLine2,
+  zipCode: zipCode ?? existingProfile?.zipCode,
+  website: website ?? existingProfile?.website,
+
+  experience: experience ?? existingProfile?.experience,
+
+  resume: resumeUrl ?? existingProfile?.resume,
+  coverLetter: coverLetterUrl ?? existingProfile?.coverLetter,
+ documents:
+  req.files?.documents?.length
+    ? uploadedDocuments
+    : existingProfile?.documents || [],
+
+  skills: skills !== undefined
+  ? skillsArray
+  : existingProfile?.skills || [],
+
+  workHistory: workHistory
+    ? JSON.parse(workHistory)
+    : existingProfile?.workHistory || [],
+
+  educationHistory: educationHistory
+    ? JSON.parse(educationHistory)
+    : existingProfile?.educationHistory || [],
+
+  languages: languages
+    ? JSON.parse(languages)
+    : existingProfile?.languages || [],
+},
       },
       { upsert: true, new: true }
     );

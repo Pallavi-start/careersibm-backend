@@ -24,20 +24,19 @@ const profileSchema = new mongoose.Schema({
   website: String,
 
   // FILES
-  resume: String,
-  coverLetter: String,
-
-  // EXTRA DOCUMENTS
-  documents: [
+ documents: [
     {
       name: String,
       fileUrl: String,
     },
   ],
 
+  resume: String,
+  coverLetter: String,
+
   // SKILLS
   skills: [String],
-
+ 
   // EXPERIENCE
   experience: String,
 
