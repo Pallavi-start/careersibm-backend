@@ -30,7 +30,7 @@ exports.updateProfile = async (req, res) => {
     } = req.body;
 
     // FILES
-   const existingProfile = await Profile.findOne({ userId });;
+   const existingProfile = await Profile.findOne({ userId });
 
 let resumeUrl = existingProfile?.resume;
 let coverLetterUrl = existingProfile?.coverLetter;
@@ -190,5 +190,48 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({
       message: "Server error",
     });
+  }
+};
+// ================= GET ALL PROFILES (ADMIN) =================
+exports.getProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find().sort({ createdAt: -1 });
+
+    const users = await User.find().lean();
+
+    const merged = users.map((user) => {
+      const profile = profiles.find(
+        (p) => String(p.userId) === String(user._id)
+      );
+
+      return {
+        ...user,
+        ...(profile
+          ? {
+              firstName: profile.firstName,
+              middleName: profile.middleName,
+              lastName: profile.lastName,
+              preferredName: profile.preferredName,
+              phoneNumber: profile.phoneNumber,
+              skills: profile.skills,
+              experience: profile.experience,
+              state: profile.state,
+              city: profile.city,
+              website: profile.website,
+              workHistory: profile.workHistory,
+              educationHistory: profile.educationHistory,
+              languages: profile.languages,
+              resume: profile.resume,
+              coverLetter: profile.coverLetter,
+              documents: profile.documents,
+            }
+          : {}),
+      };
+    });
+
+    res.json(merged);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
   }
 };

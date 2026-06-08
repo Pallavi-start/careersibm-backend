@@ -58,6 +58,6 @@ router.post(
 
 router.get("/get-profile", auth, getProfile);
 
-
+router.get("/profiles", auth, getProfiles);
 
 module.exports = router;
